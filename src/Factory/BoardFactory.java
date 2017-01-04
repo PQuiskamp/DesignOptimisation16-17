@@ -10,11 +10,22 @@ import Data.Const.Resource;
 import Data.Knoten;
 import Data.Resourcenfeld;
 
+/**
+ * 
+ * @author Patrick
+ *
+ * Factory für neue Spiel Graphn 
+ * Hex Grid Ref : http://www.redblobgames.com/grids/hexagons/#rotation
+ *
+ */
 abstract public class BoardFactory {
 		
 	static public Board creatBoard(Resource[][] myBoard){
 		
 		Board resultBoard = new Board();
+		resultBoard.setGameBoard(myBoard);
+		
+		// Erstellen aller Resourcenfeld
 		
 		HashMap<String, Resourcenfeld> rfHash = new HashMap<String, Resourcenfeld>();
 		
@@ -26,6 +37,8 @@ abstract public class BoardFactory {
 				rfHash.put(x+":"+y, resf);
 			} // END FOR
 		} // END FOR
+		
+		// Erzeugen aller Knoten und Verknüpfung mit Feldern
 		
 		ArrayList<Knoten> knotenListe = new ArrayList<Knoten>();
 		
@@ -103,6 +116,9 @@ abstract public class BoardFactory {
 			} // END FOR
 		} // END FOR
 		
+		// Nachbarschaft verküpfen der Knoten 
+		// Erst möglich nachdem alle Knoten erstellt wurden
+		
 		for (int y = 0; y < myBoard.length; y++) {
 			for (int x = 0; x < myBoard[y].length; x++) {
 				Resourcenfeld resf = rfHash.get(x+":"+y);
@@ -134,7 +150,7 @@ abstract public class BoardFactory {
 							list.add(k3);
 						}
 						
-						if(list.size() == 3){
+						if(list.size() > 0){
 							targetK.setAllNeighbor((Knoten[]) list.toArray());
 						}
 					}
