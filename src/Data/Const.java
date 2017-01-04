@@ -6,6 +6,10 @@ public class Const {
 		Lehm, Holz, Erz, Schaf, Weizen, Wüste, Wasser
 	};
 	
+	static public enum KnotenName {
+		TopLeft, TopMid, TopRight, BottomLeft, BottomMid, BottomRight
+	}
+	
 	static public Resource[][] defaultBoard = {
 			{Resource.Wasser, Resource.Wasser, 	Resource.Wasser, 	Resource.Wasser, 	Resource.Wasser, 	Resource.Wasser, 	Resource.Wasser},
 			{Resource.Wasser, Resource.Wasser, 	Resource.Wasser, 	Resource.Holz, 		Resource.Weizen, 	Resource.Erz, 		Resource.Wasser},

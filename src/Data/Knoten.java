@@ -20,7 +20,7 @@ public class Knoten {
 		return neighbors;
 	}
 	
-	public void getAllNeighbor(Knoten[] tempk) {
+	public void setAllNeighbor(Knoten[] tempk) {
 		neighbors = tempk;
 	}
 	
@@ -36,7 +36,7 @@ public class Knoten {
 		return fields;
 	}
 	
-	public void getAllField(Resourcenfeld[] tempf) {
+	public void setAllField(Resourcenfeld[] tempf) {
 		fields = tempf;
 	}
 

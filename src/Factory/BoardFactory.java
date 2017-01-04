@@ -1,62 +1,190 @@
 package Factory;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 
+import Data.Board;
 import Data.Const;
+import Data.Const.KnotenName;
 import Data.Const.Resource;
+import Data.Knoten;
 import Data.Resourcenfeld;
 
-public class BoardFactory {
-	
-	int offset = 2;
-	
-	Resource[][] resourceBoard = Const.defaultBoard;
-	
-	HashMap<String, Resourcenfeld> rfHash;
-	
-	public void creatBoard(){
+abstract public class BoardFactory {
 		
-		rfHash = new HashMap<String, Resourcenfeld>();
+	static public Board creatBoard(Resource[][] myBoard){
 		
-		for (int y = 0; y < resourceBoard.length; y++) {
-			for (int x = 0; x < resourceBoard[y].length; x++) {
-				Resource res = resourceBoard[y][x];
-				if(res != Resource.Wasser){
-					//TODO add probability
-					Resourcenfeld resf = new Resourcenfeld(res, 0f, x, y);
-					rfHash.put(x+":"+y, resf);
-				}
-			}
-		}
+		Board resultBoard = new Board();
 		
+		HashMap<String, Resourcenfeld> rfHash = new HashMap<String, Resourcenfeld>();
 		
-		for (int y = 0; y < resourceBoard.length; y++) {
-			for (int x = 0; x < resourceBoard[y].length; x++) {
+		for (int y = 0; y < myBoard.length; y++) {
+			for (int x = 0; x < myBoard[y].length; x++) {
+				Resource res = myBoard[y][x];
+				//TODO add probability
+				Resourcenfeld resf = new Resourcenfeld(res, 0f, x, y);
+				rfHash.put(x+":"+y, resf);
+			} // END FOR
+		} // END FOR
+		
+		ArrayList<Knoten> knotenListe = new ArrayList<Knoten>();
+		
+		for (int y = 0; y < myBoard.length; y++) {
+			for (int x = 0; x < myBoard[y].length; x++) {
 				Resourcenfeld resf = rfHash.get(x+":"+y);
-				if(resf != null){
-					// Top Left
-					// x=0  , y=-1
-					// x=-1 , y=0
+				if(resf != null){					
 					// Top Mid 
 					// x=0  , y=-1
 					// x=+1 , y=-1
-					// Top Right
-					// x=+1 , y=0
-					// x=+1 , y=-1
-					// Bottom Left
-					// x=-1 , y=0
-					// x=-1 , y=+1
+					Resourcenfeld res1 = rfHash.get((x)+":"+(y-1));
+					Resourcenfeld res2 = rfHash.get((x+1)+":"+(y-1));
+					
+					if(res1 != null && res2 != null){
+						
+						ArrayList<Resourcenfeld> list = new ArrayList<Resourcenfeld>();
+						
+						if(resf.getRes() != Resource.Wasser){
+							list.add(resf);
+						}
+						if(res1.getRes() != Resource.Wasser){
+							list.add(res1);
+						}
+						if(res2.getRes() != Resource.Wasser){
+							list.add(res2);
+						}
+						
+						// Erstelle knoten wenn es min. 1 Feld gibt mit Res != Wasser
+						if(list.size() > 0){
+							Knoten k = new Knoten();
+							k.setAllField((Resourcenfeld[]) list.toArray());
+							knotenListe.add(k);
+							
+							resf.setKnoten(KnotenName.TopMid, k);
+							res1.setKnoten(KnotenName.BottomRight, k);
+							res2.setKnoten(KnotenName.BottomLeft, k);
+						}
+						
+					};
+					
 					// Bottom Mid
 					// x=0  , y=+1
 					// x=-1 , y=+1
-					// Bottom Right
-					// x=0  , y=+1
-					// x=+1 , y=0
-				}
-			}
-		}
-		
-	}
+					
+					Resourcenfeld res3 = rfHash.get((x)+":"+(y+1));
+					Resourcenfeld res4 = rfHash.get((x-1)+":"+(y+1));
 
+					if(res3 != null && res4 != null){
+						
+						ArrayList<Resourcenfeld> list = new ArrayList<Resourcenfeld>();
+						
+						if(resf.getRes() != Resource.Wasser){
+							list.add(resf);
+						}
+						if(res3.getRes() != Resource.Wasser){
+							list.add(res1);
+						}
+						if(res4.getRes() != Resource.Wasser){
+							list.add(res2);
+						}
+						
+						// Erstelle knoten wenn es min. 1 Feld gibt mit Res != Wasser
+						if(list.size() > 0){
+							Knoten k = new Knoten();
+							k.setAllField((Resourcenfeld[]) list.toArray());
+							knotenListe.add(k);
+							
+							resf.setKnoten(KnotenName.BottomMid, k);
+							res3.setKnoten(KnotenName.TopLeft, k);
+							res4.setKnoten(KnotenName.TopRight, k);
+						}
+						
+					}						
+				} // END IF
+			} // END FOR
+		} // END FOR
+		
+		for (int y = 0; y < myBoard.length; y++) {
+			for (int x = 0; x < myBoard[y].length; x++) {
+				Resourcenfeld resf = rfHash.get(x+":"+y);
+				if(resf != null){
+					// Top Mid 
+					// x=0  , y=-1
+					// x=+1 , y=-1
+					Resourcenfeld res1 = rfHash.get((x)+":"+(y-1));
+					Resourcenfeld res2 = rfHash.get((x+1)+":"+(y-1));
+					
+					if(res1 != null && res2 != null){
+						
+						ArrayList<Knoten> list = new ArrayList<Knoten>();
+						
+						Knoten targetK = resf.getKnoten(KnotenName.TopMid);
+						
+						Knoten k1 = res1.getKnoten(KnotenName.BottomMid); // == TopLeft
+						Knoten k2 = res2.getKnoten(KnotenName.BottomMid); // == TopRight
+						Knoten k3 = res1.getKnoten(KnotenName.TopRight); // == k4
+						Knoten k4 = res2.getKnoten(KnotenName.TopLeft);
+						
+						if(k1 != resf.getKnoten(KnotenName.TopLeft)){
+							list.add(k1);
+						}
+						if(k2 != resf.getKnoten(KnotenName.TopRight)){
+							list.add(k2);
+						}
+						if(k3 != k4){
+							list.add(k3);
+						}
+						
+						if(list.size() == 3){
+							targetK.setAllNeighbor((Knoten[]) list.toArray());
+						}
+					}
+					
+					// Bottom Mid
+					// x=0  , y=+1
+					// x=-1 , y=+1
+					
+					Resourcenfeld res3 = rfHash.get((x)+":"+(y+1));
+					Resourcenfeld res4 = rfHash.get((x-1)+":"+(y+1));
+
+					if(res3 != null && res4 != null){
+						
+						ArrayList<Knoten> list = new ArrayList<Knoten>();
+						
+						Knoten targetK = resf.getKnoten(KnotenName.BottomMid);
+						
+						Knoten k1 = res3.getKnoten(KnotenName.TopMid); // == BottomRight
+						Knoten k2 = res4.getKnoten(KnotenName.TopMid); // == BottomLeft
+						Knoten k3 = res3.getKnoten(KnotenName.BottomLeft); // == k4
+						Knoten k4 = res4.getKnoten(KnotenName.BottomRight);
+						
+						if(k1 != resf.getKnoten(KnotenName.BottomRight)){
+							list.add(k1);
+						}
+						if(k2 != resf.getKnoten(KnotenName.BottomLeft)){
+							list.add(k2);
+						}
+						if(k3 != k4){
+							list.add(k3);
+						}
+						
+						if(list.size() == 3){
+							targetK.setAllNeighbor((Knoten[]) list.toArray());
+						}
+						
+					}
+					
+				} // END IF
+			} // END FOR
+		} // END FOR
+		
+		resultBoard.setKnotenListe(knotenListe);
+		resultBoard.setResourcenfeldHashMap(rfHash);
+		
+		return resultBoard;
+		
+	} // End FUNCTION
+	
+	static public Board creatBoard(){
+		return creatBoard(Const.defaultBoard);
+	};
 }
