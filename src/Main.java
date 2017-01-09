@@ -27,7 +27,7 @@ public class Main {
 	}
 
 	public Main() {
-		// board = BoardFactory.creatBoard();
+		board = BoardFactory.creatBoard();
 
 		mainWindow = new MainWindow(board);
 	}

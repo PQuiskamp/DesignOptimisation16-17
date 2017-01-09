@@ -69,7 +69,9 @@ abstract public class BoardFactory {
 						// Erstelle knoten wenn es min. 1 Feld gibt mit Res != Wasser
 						if(list.size() > 0){
 							Knoten k = new Knoten();
-							k.setAllField((Resourcenfeld[]) list.toArray());
+							Resourcenfeld[] kArray = new Resourcenfeld[list.size()];
+							kArray = list.toArray(kArray);
+							k.setAllField(kArray);
 							knotenListe.add(k);
 							
 							resf.setKnoten(KnotenName.TopMid, k);
@@ -103,7 +105,9 @@ abstract public class BoardFactory {
 						// Erstelle knoten wenn es min. 1 Feld gibt mit Res != Wasser
 						if(list.size() > 0){
 							Knoten k = new Knoten();
-							k.setAllField((Resourcenfeld[]) list.toArray());
+							Resourcenfeld[] kArray = new Resourcenfeld[list.size()];
+							kArray = list.toArray(kArray);
+							k.setAllField(kArray);
 							knotenListe.add(k);
 							
 							resf.setKnoten(KnotenName.BottomMid, k);

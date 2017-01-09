@@ -21,11 +21,11 @@ public class Resourcenfeld {
 	}
 	
 	public Resourcenfeld(Resource res, float probability, int x, int y) {
-		super();
 		this.res = res;
 		this.probability = probability;
 		this.x = x;
 		this.y = y;
+		knotenMap = new HashMap<KnotenName,Knoten>();
 	}
 
 	public Const.Resource getRes() {
