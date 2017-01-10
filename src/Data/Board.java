@@ -4,12 +4,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import Data.Const.Resource;
+import log.Log;
 
 public class Board {
-	
-	private ArrayList<Knoten> knotenListe; 
+
+	private ArrayList<Knoten> knotenListe;
 	private HashMap<String, Resourcenfeld> resourcenfeldHashMap;
-	
+
 	private Resource[][] gameBoard; // vgl. Const.defaultBoard
 
 	public ArrayList<Knoten> getKnotenListe() {
@@ -32,8 +33,26 @@ public class Board {
 		return gameBoard;
 	}
 
+	public Resourcenfeld getResourceAt(int i, int j) {
+		HashMap<String, Resourcenfeld> map = getResourcenfeldHashMap();
+		String key = i + ":" + j;
+		if (map.containsKey(key)) {
+			return map.get(key);
+		}
+		System.err.println("ResourceMaps does not contain key " + key);
+		return null;
+	}
+
 	public void setGameBoard(Resource[][] gameBoard) {
 		this.gameBoard = gameBoard;
+	}
+
+	public int getWidth() {
+		return getGameBoard().length;
+	}
+
+	public int getHeight() {
+		return getGameBoard()[0].length;
 	}
 
 }

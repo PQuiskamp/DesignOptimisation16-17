@@ -4,26 +4,29 @@ import java.awt.TextArea;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.swing.JScrollBar;
 import javax.swing.JTextArea;
 
 public abstract class Log {
 
 	private static JTextArea outputArea;
+	private static JScrollBar scrollBar;
 
 	public static void log(String text) {
 		if (text == null) {
 			text = "<null>";
 		}
 
-		text = formatNow() + " " + text.trim();
+		text = "[" + formatNow() + "] " + text.trim();
 		System.out.println(text);
-
 		if (outputArea != null) {
-			outputArea.append("\n" + text);
+			outputArea.append(text + "\n");
+			scrollBar.setValue(scrollBar.getMaximum());
 		}
 	}
 
 	public static void clear() {
+		log("Clearing the visible log.");
 		if (outputArea != null) {
 			outputArea.setText("");
 		}
@@ -35,6 +38,10 @@ public abstract class Log {
 			return;
 		}
 		log(o.toString());
+	}
+
+	public static void setScrollBar(JScrollBar scrollBar) {
+		Log.scrollBar = scrollBar;
 	}
 
 	public static String formatNow() {

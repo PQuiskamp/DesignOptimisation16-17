@@ -4,6 +4,7 @@ import javax.swing.UIManager;
 import Data.Board;
 import Factory.BoardFactory;
 import ui.MainWindow;
+import ui.hex.HexMaker;
 
 public class Main {
 

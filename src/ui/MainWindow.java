@@ -11,10 +11,14 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.ActionEvent;
 import javax.swing.JPanel;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+import java.awt.Point;
+
 import javax.swing.border.TitledBorder;
 import javax.swing.JButton;
 import javax.swing.JTextPane;
@@ -23,6 +27,8 @@ import javax.swing.JScrollPane;
 import javax.swing.BoxLayout;
 import java.awt.Component;
 import javax.swing.Box;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.JSplitPane;
 
 public class MainWindow extends JFrame {
 
@@ -30,6 +36,9 @@ public class MainWindow extends JFrame {
 	private Board board;
 	private BoardDisplayer boardDisplayer;
 	public static final int MINIMUM_HEIGHT = 900;
+	private JScrollPane logPane;
+	private GridBagLayout gridBagLayout;
+	private JTextArea log;
 
 	public MainWindow(Board board) {
 		this.board = board;
@@ -61,65 +70,101 @@ public class MainWindow extends JFrame {
 			}
 		});
 		mnEdit.add(mntmClearLog);
-		GridBagLayout gridBagLayout = new GridBagLayout();
-		gridBagLayout.columnWidths = new int[] { 0, 0, 0 };
-		gridBagLayout.rowHeights = new int[] { 176, 200, 0 };
-		gridBagLayout.columnWeights = new double[] { 1.0, 0.0, Double.MIN_VALUE };
-		gridBagLayout.rowWeights = new double[] { 1.0, 0.0, Double.MIN_VALUE };
+
+		gridBagLayout = new GridBagLayout();
+		gridBagLayout.columnWidths = new int[] { 0, 0 };
+		gridBagLayout.rowHeights = new int[] { 200, 0 };
+		gridBagLayout.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
+		gridBagLayout.rowWeights = new double[] { 1.0, Double.MIN_VALUE };
 		getContentPane().setLayout(gridBagLayout);
 
+		JSplitPane splitPane = new JSplitPane();
+		GridBagConstraints gbc_splitPane = new GridBagConstraints();
+		gbc_splitPane.fill = GridBagConstraints.BOTH;
+		gbc_splitPane.gridx = 0;
+		gbc_splitPane.gridy = 0;
+		getContentPane().add(splitPane, gbc_splitPane);
+
 		boardDisplayer = new BoardDisplayer(board);
-		GridBagConstraints gbc_panel = new GridBagConstraints();
-		gbc_panel.insets = new Insets(0, 0, 5, 5);
-		gbc_panel.fill = GridBagConstraints.BOTH;
-		gbc_panel.gridx = 0;
-		gbc_panel.gridy = 0;
-		getContentPane().add(boardDisplayer, gbc_panel);
+		splitPane.setLeftComponent(boardDisplayer);
+
+		JPanel panel = new JPanel();
+		splitPane.setRightComponent(panel);
+		GridBagLayout gbl_panel = new GridBagLayout();
+		gbl_panel.columnWidths = new int[] { 95, 0, 0 };
+		gbl_panel.rowHeights = new int[] { 79, 0 };
+		gbl_panel.columnWeights = new double[] { 0.0, 1.0, Double.MIN_VALUE };
+		gbl_panel.rowWeights = new double[] { 1.0, Double.MIN_VALUE };
+		panel.setLayout(gbl_panel);
 
 		JPanel panel_1 = new JPanel();
-		panel_1.setBorder(new TitledBorder(null, "Actions", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		GridBagConstraints gbc_panel_1 = new GridBagConstraints();
-		gbc_panel_1.insets = new Insets(0, 0, 5, 0);
-		gbc_panel_1.fill = GridBagConstraints.BOTH;
-		gbc_panel_1.gridx = 1;
+		gbc_panel_1.anchor = GridBagConstraints.NORTH;
+		gbc_panel_1.insets = new Insets(0, 0, 0, 5);
+		gbc_panel_1.gridx = 0;
 		gbc_panel_1.gridy = 0;
-		getContentPane().add(panel_1, gbc_panel_1);
+		panel.add(panel_1, gbc_panel_1);
+		panel_1.setBorder(new TitledBorder(null, "Actions", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panel_1.setLayout(new BoxLayout(panel_1, BoxLayout.Y_AXIS));
 
-		JButton button = new JButton("Do");
-		panel_1.add(button);
+		JButton btnPlaceNext = new JButton("Place next");
+		panel_1.add(btnPlaceNext);
 
 		Component verticalStrut = Box.createVerticalStrut(10);
 		panel_1.add(verticalStrut);
 
-		JButton btnNewButton = new JButton("Some");
+		JButton btnNewButton = new JButton("Clar Log");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Log.clear();
+			}
+		});
 		panel_1.add(btnNewButton);
 
-		Component verticalStrut_1 = Box.createVerticalStrut(10);
-		panel_1.add(verticalStrut_1);
+		logPane = new JScrollPane();
+		GridBagConstraints gbc_logPane = new GridBagConstraints();
+		gbc_logPane.fill = GridBagConstraints.BOTH;
+		gbc_logPane.gridx = 1;
+		gbc_logPane.gridy = 0;
+		panel.add(logPane, gbc_logPane);
+		logPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
-		JButton btnStuff = new JButton("Stuff");
-		panel_1.add(btnStuff);
+		splitPane.setResizeWeight(0.7);
 
-		JScrollPane scrollPane = new JScrollPane();
-		GridBagConstraints gbc_scrollPane = new GridBagConstraints();
-		gbc_scrollPane.gridwidth = 2;
-		gbc_scrollPane.insets = new Insets(0, 0, 0, 5);
-		gbc_scrollPane.fill = GridBagConstraints.BOTH;
-		gbc_scrollPane.gridx = 0;
-		gbc_scrollPane.gridy = 1;
-		getContentPane().add(scrollPane, gbc_scrollPane);
-
-		JTextArea textArea = new JTextArea();
-		textArea.setEditable(false);
-		scrollPane.setViewportView(textArea);
-		Log.setOutputArea(textArea);
+		log = new JTextArea();
+		logPane.setViewportView(log);
+		log.setText("test");
+		log.setEditable(false);
+		Log.setOutputArea(log);
+		Log.setScrollBar(logPane.getVerticalScrollBar());
+		printSystemLogs();
 
 		setSize(MINIMUM_HEIGHT, MINIMUM_HEIGHT * 9 / 16);
 		setMinimumSize(getSize());
 		setLocationRelativeTo(null);
 
 		setVisible(true);
+	}
+
+	private void printSystemLogs() {
+		Log.log("JVM Running information: Java Vendor: " + System.getProperty("java.vendor"));
+		Log.log("JVM Running information: Java Version: " + System.getProperty("java.version"));
+		Log.log("JVM Running information: Java Vendor URL: " + System.getProperty("java.vendor.url"));
+		Log.log("JVM Running information: Java installed in: " + System.getProperty("java.home"));
+		Log.log("JVM Running information: Java VM Name: " + System.getProperty("java.vm.name"));
+		Log.log("JVM Running information: Java VM Vendor: " + System.getProperty("java.vm.vendor"));
+		Log.log("JVM Running information: Java VM Version: " + System.getProperty("java.vm.version"));
+		Log.log("JVM Running information: Java Specification Name: " + System.getProperty("java.specification.name"));
+		Log.log("JVM Running information: Java Specification Vendor: "
+				+ System.getProperty("java.specification.vendor"));
+		Log.log("JVM Running information: Java Specification Version: "
+				+ System.getProperty("java.specification.version"));
+		Log.log("JVM Running information: Java VM Specification Name: "
+				+ System.getProperty("java.vm.specification.name"));
+		Log.log("JVM Running information: Java VM Specification Vendor: "
+				+ System.getProperty("java.vm.specification.vendor"));
+		Log.log("JVM Running information: Java VM Specification Version: "
+				+ System.getProperty("java.vm.specification.version"));
 	}
 
 }
