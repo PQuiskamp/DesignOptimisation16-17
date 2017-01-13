@@ -1,6 +1,9 @@
 package Data;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Set;
 
 import Data.Const.KnotenName;
 import Data.Const.Resource;
@@ -9,23 +12,34 @@ public class Resourcenfeld {
 
 	private Const.Resource res;
 	private float probability;
-	
-	private HashMap<KnotenName,Knoten> knotenMap;
-	
+
+	private HashMap<KnotenName, Knoten> knotenMap;
+
 	private int x;
 	private int y;
-	
-	public Resourcenfeld(Const.Resource type) {
+	private int diceValue;
+
+	public Resourcenfeld(Resource type) {
 		res = type;
-		knotenMap = new HashMap<KnotenName,Knoten>();
+		knotenMap = new HashMap<KnotenName, Knoten>();
+		setDiceValue(-1);
 	}
-	
+
 	public Resourcenfeld(Resource res, float probability, int x, int y) {
 		this.res = res;
 		this.probability = probability;
 		this.x = x;
 		this.y = y;
-		knotenMap = new HashMap<KnotenName,Knoten>();
+		knotenMap = new HashMap<KnotenName, Knoten>();
+		setDiceValue(-1);
+	}
+
+	public int getDiceValue() {
+		return diceValue;
+	}
+
+	public void setDiceValue(int diceValue) {
+		this.diceValue = diceValue;
 	}
 
 	public Const.Resource getRes() {
@@ -64,19 +78,23 @@ public class Resourcenfeld {
 		return knotenMap.get(key);
 	}
 
+	public Set<KnotenName> getKnotenKeys() {
+		return knotenMap.keySet();
+	}
+
 	public void setKnoten(KnotenName key, Knoten knoten) {
-		
-		//TODO Debug
-		if(knotenMap.get(key) != null)			
-			System.out.println("Override Knoten :" + key.toString() +" at"+x+" , "+y);
-		if(knotenMap.values().size() > 6)
-			System.out.println("Overflow Knoten :" + key.toString() +" at"+x+" , "+y);
-		
+
+		// TODO Debug
+		if (knotenMap.get(key) != null)
+			System.out.println("Override Knoten :" + key.toString() + " at" + x + " , " + y);
+		if (knotenMap.values().size() > 6)
+			System.out.println("Overflow Knoten :" + key.toString() + " at" + x + " , " + y);
+
 		knotenMap.put(key, knoten);
 	}
-	
-	public Knoten[] getKnotenList(){
-		return (Knoten[]) knotenMap.values().toArray();
+
+	public Collection<Knoten> getKnotenList() {
+		return knotenMap.values();
 	}
-		
+
 }

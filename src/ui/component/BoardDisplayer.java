@@ -9,16 +9,22 @@ import java.awt.RenderingHints;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Random;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import Data.Board;
+import Data.Knoten;
+import Data.Const.KnotenName;
 import Data.Const.Resource;
 import Data.ResourceCompat;
+import Data.Resourcenfeld;
 import log.Log;
 import ui.hex.HexMaker;
+import ui.hex.Hexagon;
 
 public class BoardDisplayer extends JPanel {
 
@@ -57,13 +63,14 @@ public class BoardDisplayer extends JPanel {
 					return;
 				}
 
-				int x = e.getX();
-				int y = e.getY();
+				// int x = e.getX();
+				// int y = e.getY();
 				// mPt.x = x;
 				// mPt.y = y;
-				Point p = new Point(maker.pxtoHex(e.getX(), e.getY()));
-				if (p.x < 0 || p.y < 0 || p.x >= board.getWidth() || p.y >= board.getHeight())
-					return;
+				// Point p = new Point(maker.pxtoHex(e.getX(), e.getY()));
+				// if (p.x < 0 || p.y < 0 || p.x >= board.getWidth() || p.y >=
+				// board.getHeight())
+				// return;
 
 				// DEBUG: colour in the hex which is supposedly the one clicked
 				// on
@@ -74,9 +81,14 @@ public class BoardDisplayer extends JPanel {
 				 */
 
 				// What do you want to do when a hexagon is clicked?
-				Log.log("Clicked on (" + p.x + "," + p.y + ")! Field description: "
-						+ ResourceCompat.getName(board.getResourceAt(p.x, p.y).getRes()));
+				// Log.log("Clicked on (" + p.x + "," + p.y + ")! Field
+				// description: "+
+				// ResourceCompat.getName(board.getResourceAt(p.x,
+				// p.y).getRes()));
 				// board[p.x][p.y] = (int) 'X';
+
+				Point p = e.getPoint();
+				Log.log("Clicked: (" + p.x + ", " + p.y + ")");
 				repaint();
 			}
 		});
@@ -87,8 +99,6 @@ public class BoardDisplayer extends JPanel {
 		int width = getWidth();
 		int height = getHeight();
 
-		// Color black = Color.BLACK;
-		//
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, width, height);
 
@@ -97,7 +107,7 @@ public class BoardDisplayer extends JPanel {
 		}
 		int boardWidth = board.getWidth();
 		int boardHeight = board.getHeight();
-		maker = new HexMaker(width / (boardWidth + 1), height / (boardHeight + 1), board);
+		maker = new HexMaker(width / (boardWidth + 1), height / (boardHeight + 1), 20, board);
 
 		// Color helloWorldColor = getRandomColor();
 		// g.setColor(helloWorldColor);
@@ -109,22 +119,49 @@ public class BoardDisplayer extends JPanel {
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g.setFont(new Font("TimesRoman", Font.PLAIN, 20));
 
-		// draw grid
-		for (int j = 0; j < boardHeight; j++) {
-			for (int i = 0; i < boardWidth; i++) {
-				maker.drawHex(i, j, g2);
-			}
-		}
 		// fill in hexes
+		ArrayList<Hexagon> hexes = new ArrayList<>();
 		for (int j = 0; j < boardHeight; j++) {
 			for (int i = 0; i < boardWidth; i++) {
 				// if (board[i][j] <
 				// 0)maker.fillHex(i,j,COLOURONE,-board[i][j],g2);
 				// if (board[i][j] > 0)
 				// hexmech.fillHex(i,j,COLOURTWO,board[i][j],g2);
-				maker.fillHex(i, j, g2);
+				Hexagon hex = maker.fillHex(i, j, g2);
+				hexes.add(hex);
 			}
 		}
+
+		HashMap<Knoten, Point> pointMap = new HashMap<>();
+		for (Hexagon hex : hexes) {
+			Resourcenfeld feld = hex.getFeld();
+			Resource resource = feld.getRes();
+
+			if (resource == Resource.Wüste || resource == Resource.Wasser) {
+				continue;
+			}
+
+			// Draw nodes
+			g2.setColor(Color.BLACK);
+			for (KnotenName name : KnotenName.values()) {
+				Knoten k = feld.getKnoten(name);
+				Point p = hex.getKnoten(name);
+
+				pointMap.put(k, p);
+			}
+		}
+
+		for (Knoten k : pointMap.keySet()) {
+			Point p = pointMap.get(k);
+
+			int size = (int) (maker.getBaseFontSize() *0.75);
+			g2.setColor(Color.BLACK);
+			g2.fillOval(p.x - size / 2, p.y - size / 2, size, size);
+
+			g2.setColor(Color.WHITE);
+			g2.drawString("#", p.x - size / 4, p.y + size / 4);
+		}
+
 	}
 
 	private Color getRandomColor() {
