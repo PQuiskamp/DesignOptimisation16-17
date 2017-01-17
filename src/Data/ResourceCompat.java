@@ -29,7 +29,8 @@ public abstract class ResourceCompat {
 			return SAND;
 		case Weizen:
 			return WHEAT;
-
+		case Void :
+			return Color.BLACK;
 		default:
 			return Color.WHITE;
 		}

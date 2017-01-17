@@ -137,7 +137,7 @@ public class BoardDisplayer extends JPanel {
 			Resourcenfeld feld = hex.getFeld();
 			Resource resource = feld.getRes();
 
-			if (resource == Resource.Wüste || resource == Resource.Wasser) {
+			if (resource == Resource.Wüste || resource == Resource.Wasser || resource == Resource.Void) {
 				continue;
 			}
 
