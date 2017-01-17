@@ -20,4 +20,14 @@ public abstract class Const {
 			{Resource.Wasser, Resource.Wasser, 	Resource.Wasser, 	Resource.Wasser, 	Resource.Void, 	Resource.Void, 	Resource.Void}
 	};
 	
+	static public int[][] defaultBoardDice = {
+			{0,0,0,0,0,0,0},
+			{0,0,0,3,8,2,0},
+			{0,0,4,11,4,6,0},
+			{0,9,8,0,5,10,0},
+			{0,11,3,12,2,0,0},
+			{0,9,5,6,0,0,0},
+			{0,0,0,0,0,0,0}
+	};
+	
 }

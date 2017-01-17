@@ -38,7 +38,7 @@ abstract public class BoardFactory {
 				Resourcenfeld resf = new Resourcenfeld(res, 0f, x, y);
 
 				if (res != Resource.Wasser && res != Resource.Wüste) {
-					resf.setDiceValue(new Random().nextInt(11) + 1);
+					resf.setDiceValue(Const.defaultBoardDice[y][x]);
 				}
 
 				rfHash.put(x + ":" + y, resf);
