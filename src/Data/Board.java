@@ -1,10 +1,10 @@
 package Data;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 
 import Data.Const.Resource;
-import log.Log;
 
 public class Board {
 
@@ -31,6 +31,12 @@ public class Board {
 
 	public Resource[][] getGameBoard() {
 		return gameBoard;
+	}
+	
+	public Knoten getBestKnoten(){
+		ArrayList<Knoten> list = new ArrayList<>(knotenListe);
+		Collections.sort(list);
+		return list.get(0);
 	}
 
 	public Resourcenfeld getResourceAt(int i, int j) {

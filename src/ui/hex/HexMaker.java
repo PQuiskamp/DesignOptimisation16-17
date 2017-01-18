@@ -4,22 +4,18 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.Polygon;
-import java.util.Arrays;
 
 import Data.Board;
-import Data.Knoten;
+import Data.Const.Resource;
 import Data.ResourceCompat;
 import Data.Resourcenfeld;
-import Data.Const.Resource;
-import log.Log;
 import ui.component.BoardDisplayer;
 
 public class HexMaker {
 
 	public static final String FONT_NAME = "Courier new";
 	public boolean XYVertex = true;
-	private int offset;
+	private int offsetX, offsetY;
 	private int baseFontsize;
 
 	private int s = 0; // length of one side
@@ -30,12 +26,13 @@ public class HexMaker {
 						// hexes. Distance between two opposite sides in a hex.
 	private Board board;
 
-	public HexMaker(int width, int height, int offset, Board board) {
+	public HexMaker(int width, int height, int offsetX, int offsetY, Board board) {
 		this.board = board;
 
 		setSide(width);
 		setHeight(height);
-		this.offset = offset;
+		this.offsetX = offsetX;
+		this.offsetY = offsetY;
 		baseFontsize = (int) (s * 0.7);
 	}
 
@@ -61,8 +58,8 @@ public class HexMaker {
 	}
 
 	public Hexagon hex(int x0, int y0, Resourcenfeld feld) {
-		int y = y0 + offset;
-		int x = x0 + offset;
+		int y = y0 + offsetY;
+		int x = x0 + offsetX;
 		// double mod = Math.sqrt(Math.pow(x, (y + h * 0.25))+Math.pow((x + h *
 		// 0.5), y));
 		double mod = t * 2 / 3;
@@ -138,11 +135,11 @@ public class HexMaker {
 
 			g2.setColor(Color.BLACK);
 			g2.setFont(textFont);
-			g2.drawString(String.valueOf(würfelvalue), x + r + offset - baseFontsize / 3, y + r + offset + 4);
+			g2.drawString(String.valueOf(würfelvalue), x + r + offsetX - baseFontsize / 3, y + r + offsetY + 4);
 
 			String percentage = feld.getProbability() + "%";
 			g2.setFont(new Font(FONT_NAME, Font.PLAIN, baseFontsize / 2));
-			g2.drawString(percentage, x + r + offset - baseFontsize / 3, y + r + offset + 4 + baseFontsize / 2);
+			g2.drawString(percentage, x + r + offsetX - baseFontsize / 3, y + r + offsetY + 4 + baseFontsize / 2);
 		}
 
 		// Draw Grid
@@ -159,8 +156,8 @@ public class HexMaker {
 	public Point pxtoHex(int mx, int my) {
 		Point p = new Point(-1, -1);
 
-		mx -= offset;
-		my -= offset;
+		mx -= offsetX;
+		my -= offsetY;
 		if (XYVertex)
 			mx += t;
 

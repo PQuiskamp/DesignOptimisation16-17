@@ -1,47 +1,42 @@
 package ui;
 
-import javax.swing.JFrame;
+import java.awt.Component;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-import Data.Board;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTextArea;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.border.TitledBorder;
+
+import game.Game;
 import log.Log;
 import ui.component.BoardDisplayer;
-
-import java.awt.GridBagLayout;
-import javax.swing.JMenuBar;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.ActionEvent;
-import javax.swing.JPanel;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
-import java.awt.Point;
-
-import javax.swing.border.TitledBorder;
-import javax.swing.JButton;
-import javax.swing.JTextPane;
-import javax.swing.JTextArea;
-import javax.swing.JScrollPane;
-import javax.swing.BoxLayout;
-import java.awt.Component;
-import javax.swing.Box;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.JSplitPane;
 
 public class MainWindow extends JFrame {
 
 	private static final long serialVersionUID = -3124347100103349080L;
-	private Board board;
+	private Game game;
 	private BoardDisplayer boardDisplayer;
 	public static final int MINIMUM_HEIGHT = 900;
 	private JScrollPane logPane;
 	private GridBagLayout gridBagLayout;
 	private JTextArea log;
 
-	public MainWindow(Board board) {
-		this.board = board;
+	public MainWindow(Game game) {
+		this.game = game;
 
 		setTitle("Design Optimisation WS 16/17 - Die Siedler von Catan");
 
@@ -85,7 +80,7 @@ public class MainWindow extends JFrame {
 		gbc_splitPane.gridy = 0;
 		getContentPane().add(splitPane, gbc_splitPane);
 
-		boardDisplayer = new BoardDisplayer(board);
+		boardDisplayer = new BoardDisplayer(game);
 		splitPane.setLeftComponent(boardDisplayer);
 
 		JPanel panel = new JPanel();
@@ -107,8 +102,24 @@ public class MainWindow extends JFrame {
 		panel_1.setBorder(new TitledBorder(null, "Actions", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panel_1.setLayout(new BoxLayout(panel_1, BoxLayout.Y_AXIS));
 
-		JButton btnPlaceNext = new JButton("Place next");
+		JButton btnPlaceNext = new JButton("Execute Turn");
+		btnPlaceNext.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				executeTurn();
+			}
+		});
 		panel_1.add(btnPlaceNext);
+
+		Component verticalStrut_1 = Box.createVerticalStrut(10);
+		panel_1.add(verticalStrut_1);
+
+		JButton btnNewButton_1 = new JButton("Finish Round");
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				finishRound();
+			}
+		});
+		panel_1.add(btnNewButton_1);
 
 		Component verticalStrut = Box.createVerticalStrut(10);
 		panel_1.add(verticalStrut);
@@ -144,6 +155,16 @@ public class MainWindow extends JFrame {
 		setLocationRelativeTo(null);
 
 		setVisible(true);
+	}
+
+	private void finishRound() {
+		game.finishRound();
+		repaint();
+	}
+
+	private void executeTurn() {
+		game.nextTurn();
+		repaint();
 	}
 
 	private void printSystemLogs() {

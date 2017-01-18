@@ -1,15 +1,10 @@
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
-import Data.Board;
-import Factory.BoardFactory;
+import game.Game;
 import ui.MainWindow;
-import ui.hex.HexMaker;
 
 public class Main {
-
-	private MainWindow mainWindow;
-	private Board board;
 
 	public static void main(String[] args) {
 
@@ -22,15 +17,9 @@ public class Main {
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				new Main();
+				new MainWindow(Game.defaultGame());
 			}
 		});
-	}
-
-	public Main() {
-		board = BoardFactory.creatBoard();
-
-		mainWindow = new MainWindow(board);
 	}
 
 }

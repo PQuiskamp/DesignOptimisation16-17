@@ -9,19 +9,17 @@ import java.awt.RenderingHints;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Random;
 
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import Data.Board;
-import Data.Knoten;
 import Data.Const.KnotenName;
 import Data.Const.Resource;
-import Data.ResourceCompat;
+import Data.Knoten;
 import Data.Resourcenfeld;
+import game.Game;
+import game.Player;
 import log.Log;
 import ui.hex.HexMaker;
 import ui.hex.Hexagon;
@@ -29,9 +27,6 @@ import ui.hex.Hexagon;
 public class BoardDisplayer extends JPanel {
 
 	private static final long serialVersionUID = 3755425870029209163L;
-
-	private Board board;
-	private ArrayList<Color> randomColorList;
 
 	public final static Color COLOURCELL = Color.ORANGE;
 	public final static Color COLOURGRID = Color.BLACK;
@@ -42,19 +37,12 @@ public class BoardDisplayer extends JPanel {
 	final static int EMPTY = 0;
 	final static int HEXSIZE = 60; // hex size in pixels
 	final static int BORDERS = 15;
+
 	private HexMaker maker;
+	private Game game;
 
-	public BoardDisplayer(Board board) {
-		this.board = board;
-
-		randomColorList = new ArrayList<>();
-		randomColorList.add(Color.RED);
-		randomColorList.add(Color.BLUE);
-		randomColorList.add(Color.GREEN);
-		randomColorList.add(Color.YELLOW);
-		randomColorList.add(Color.ORANGE);
-		randomColorList.add(Color.CYAN);
-		randomColorList.add(Color.PINK);
+	public BoardDisplayer(Game game) {
+		this.game = game;
 
 		addMouseListener(new MouseAdapter() {
 			@Override
@@ -102,12 +90,16 @@ public class BoardDisplayer extends JPanel {
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, width, height);
 
+		if (game == null) {
+			return;
+		}
+		Board board = game.getBoard();
 		if (board == null) {
 			return;
 		}
 		int boardWidth = board.getWidth();
 		int boardHeight = board.getHeight();
-		maker = new HexMaker(width / (boardWidth + 1), height / (boardHeight + 1), 20, board);
+		maker = new HexMaker(width / (boardWidth + 1), height / (boardHeight + 1), -70,50, board);
 
 		// Color helloWorldColor = getRandomColor();
 		// g.setColor(helloWorldColor);
@@ -119,7 +111,7 @@ public class BoardDisplayer extends JPanel {
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g.setFont(new Font("TimesRoman", Font.PLAIN, 20));
 
-		// fill in hexes
+		// draw hexes
 		ArrayList<Hexagon> hexes = new ArrayList<>();
 		for (int j = 0; j < boardHeight; j++) {
 			for (int i = 0; i < boardWidth; i++) {
@@ -151,21 +143,48 @@ public class BoardDisplayer extends JPanel {
 			}
 		}
 
+		int fontSize = maker.getBaseFontSize();
+		// Draw Knoten
 		for (Knoten k : pointMap.keySet()) {
 			Point p = pointMap.get(k);
 
-			int size = (int) (maker.getBaseFontSize() *0.75);
-			g2.setColor(Color.BLACK);
-			g2.fillOval(p.x - size / 2, p.y - size / 2, size, size);
+			int size = (int) (fontSize * 0.75);
+			Player owner = k.getOwner();
+			if (owner == null) {
+				g2.setColor(Color.BLACK);
+				g2.fillOval(p.x - size / 2, p.y - size / 2, size, size);
 
-			g2.setColor(Color.WHITE);
-			g2.drawString("#", p.x - size / 4, p.y + size / 4);
+				if (k.isClaimable()) {
+					g2.setColor(Color.WHITE);
+					g2.drawString(String.valueOf(k.getScore()), p.x - size / 4, p.y + size / 4);
+				}
+			} else {
+				g2.setColor(Color.BLACK);
+				g2.fillRect(p.x - size / 2, p.y - size / 2, size, size);
+
+				g2.setColor(owner.getColor());
+				g2.fillRect(p.x - size / 2 + 5, p.y - size / 2 + 5, size - 10, size - 10);
+			}
 		}
 
-	}
+		// Draw players
+		Point textOrigin = new Point(width - fontSize * 6, 5 + fontSize);
+		g2.setFont(new Font(HexMaker.FONT_NAME, Font.PLAIN, fontSize));
+		g2.setColor(Color.WHITE);
+		g2.drawString(" Round: " + game.getRound(), textOrigin.x, textOrigin.y);
 
-	private Color getRandomColor() {
-		return randomColorList.get(new Random().nextInt(randomColorList.size()));
+		for (int i = 0; i < game.getPlayerCount(); i++) {
+			Player p = game.getPlayer(i);
+			g2.setColor(p.getColor());
+
+			String turnTag = " ";
+			if (game.getCurrentPlayer() == p) {
+				turnTag = ">";
+			}
+
+			String playername = turnTag + "Player " + (i + 1);
+			g2.drawString(playername, textOrigin.x, textOrigin.y + fontSize * (i + 1));
+		}
 	}
 
 }

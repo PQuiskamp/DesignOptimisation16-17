@@ -2,13 +2,10 @@ package ui.hex;
 
 import java.awt.Point;
 import java.awt.Polygon;
-import java.awt.geom.Point2D;
 import java.util.HashMap;
 
-import Data.Knoten;
-import Data.Resourcenfeld;
 import Data.Const.KnotenName;
-import Data.Const.KnotenName.*;
+import Data.Resourcenfeld;
 
 public class Hexagon extends Polygon {
 

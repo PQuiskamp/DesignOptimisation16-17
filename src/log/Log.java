@@ -1,6 +1,5 @@
 package log;
 
-import java.awt.TextArea;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
