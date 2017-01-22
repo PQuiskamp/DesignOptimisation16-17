@@ -8,6 +8,7 @@ import java.util.Random;
 
 import Data.Board;
 import Data.Knoten;
+import Data.Resourcenfeld;
 import Factory.BoardFactory;
 import log.Log;
 
@@ -37,7 +38,7 @@ public class Game {
 		}
 
 		nextRound();
-		updateKnotenScores();
+		updateKnotenScores(getCurrentPlayer());
 	}
 
 	private void nextRound() {
@@ -65,19 +66,22 @@ public class Game {
 	}
 
 	private void executeTurn(Player player) {
-		updateKnotenScores();
+		updateKnotenScores(player);
 		Knoten best = board.getBestKnoten();
 
 		if (best != null) {
 			// Log.log("Player " + player.getColor().toString() + " claims the
 			// node with the value of " + best.getScore());
 			best.setOwner(player);
+
+			// Update number of resources a player has
+			player.updateResourceNumbers();
 		}
 	}
 
-	public void updateKnotenScores() {
+	public void updateKnotenScores(Player player) {
 		for (Knoten k : board.getKnotenListe()) {
-			k.updateScore(round, getCurrentPlayer());
+			k.updateScore(round, player);
 		}
 
 		String res = "No best node found.";

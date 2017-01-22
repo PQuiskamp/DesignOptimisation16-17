@@ -1,6 +1,6 @@
 package Data;
 
-import java.util.Random;
+import java.util.*;
 
 import game.Player;
 
@@ -10,8 +10,13 @@ public class Knoten implements Comparable<Knoten> {
 	private Resourcenfeld[] fields;
 	private Player owner;
 
+	public Knoten() {
+		neighbors = new Knoten[]{};
+		fields = new Resourcenfeld[]{};
+	}
+
 	// Bewertung des Knotens
-	private int score;
+	private float score;
 
 	public Knoten getNeighbor(int index) {
 		return neighbors[index];
@@ -45,11 +50,11 @@ public class Knoten implements Comparable<Knoten> {
 		fields = tempf;
 	}
 
-	public int getScore() {
+	public float getScore() {
 		return score;
 	}
 
-	public void setScore(int score) {
+	public void setScore(float score) {
 		this.score = score;
 	}
 
@@ -58,18 +63,40 @@ public class Knoten implements Comparable<Knoten> {
 	}
 
 	public void updateScore(int round, Player activePlayer) {
-		// TODO update Score here!
+
+		float score = 0f;
+
+		HashMap<Const.Resource, Integer> resourceIntegerHashMap = new HashMap<>();
+		ArrayList<Resourcenfeld> resfelder = new ArrayList<>(Arrays.asList(fields));
+		resfelder.sort((o1, o2) -> Float.compare(o2.getProbability(), o1.getProbability()));
+		for(Resourcenfeld f: resfelder) {
+			if(f == null)
+				continue;
+			float prob = f.getProbability();
+			prob = prob * activePlayer.getNeedsModified(f.getRes(),
+					resourceIntegerHashMap.get(f.getRes())==null?0:resourceIntegerHashMap.get(f.getRes()));
+			score += prob;
+
+			if(resourceIntegerHashMap.containsKey(f.getRes())) {
+				resourceIntegerHashMap.put(f.getRes(), resourceIntegerHashMap.get(f.getRes())+1);
+			} else {
+				resourceIntegerHashMap.put(f.getRes(), 1);
+			}
+		}
+
 		if (!isClaimable()) {
 			setScore(0);
 			return;
 		}
 
-		setScore((int) Math.abs(new Random().nextGaussian() * 100));
+		setScore(score);
 	}
 
 	public boolean isClaimable() {
-		// TODO determine if this knoten is able to claimed by a player
-
+		for(Knoten k: neighbors) {
+			if (k.hasOwner())
+				return false;
+		}
 		return !hasOwner();
 	}
 
@@ -83,7 +110,7 @@ public class Knoten implements Comparable<Knoten> {
 
 	@Override
 	public int compareTo(Knoten k) {
-		return k.getScore() - getScore();
+		return Float.compare(k.getScore(), getScore());
 	}
 
 }

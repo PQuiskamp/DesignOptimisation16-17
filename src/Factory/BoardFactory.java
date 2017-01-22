@@ -1,6 +1,8 @@
 package Factory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 
 import Data.Board;
@@ -25,20 +27,27 @@ abstract public class BoardFactory {
 		Board resultBoard = new Board();
 		resultBoard.setGameBoard(myBoard);
 
+		Integer[] plaettchen = {2,3,3,4,4,5,5,6,6,8,8,9,9,10,10,11,11,12};
+		ArrayList<Integer> plaettchenList = new ArrayList<>(Arrays.asList(plaettchen));
+		Collections.shuffle(plaettchenList);
+
 		// Erstellen aller Resourcenfeld
 
 		HashMap<String, Resourcenfeld> rfHash = new HashMap<String, Resourcenfeld>();
 
+		int i = 0;
 		for (int y = 0; y < myBoard.length; y++) {
 			for (int x = 0; x < myBoard[y].length; x++) {
 				Resource res = myBoard[y][x];
-				// TODO add probability
-				// TODO add diceValue
-				Resourcenfeld resf = new Resourcenfeld(res, 0f, x, y);
 
-				if (res != Resource.Wasser && res != Resource.Wüste) {
-					resf.setDiceValue(Const.defaultBoardDice[y][x]);
+				int diceValue = 0;
+				if (res != Resource.Wasser && res != Resource.Wüste && res != Resource.Void) {
+					// diceValue = plaettchenList.get(i);
+					diceValue = Const.defaultBoardDice[y][x];
+					i++;
 				}
+
+				Resourcenfeld resf = new Resourcenfeld(res, diceValue, x, y);
 
 				rfHash.put(x + ":" + y, resf);
 			} // END FOR
@@ -62,13 +71,13 @@ abstract public class BoardFactory {
 
 						ArrayList<Resourcenfeld> list = new ArrayList<Resourcenfeld>();
 
-						if (resf.getRes() != Resource.Wasser) {
+						if (resf.getRes() != Resource.Wasser && resf.getRes() != Resource.Void) {
 							list.add(resf);
 						}
-						if (res1.getRes() != Resource.Wasser) {
+						if (res1.getRes() != Resource.Wasser && res1.getRes() != Resource.Void) {
 							list.add(res1);
 						}
-						if (res2.getRes() != Resource.Wasser) {
+						if (res2.getRes() != Resource.Wasser && res2.getRes() != Resource.Void) {
 							list.add(res2);
 						}
 
@@ -100,14 +109,14 @@ abstract public class BoardFactory {
 
 						ArrayList<Resourcenfeld> list = new ArrayList<Resourcenfeld>();
 
-						if (resf.getRes() != Resource.Wasser) {
+						if (resf.getRes() != Resource.Wasser && resf.getRes() != Resource.Void) {
 							list.add(resf);
 						}
-						if (res3.getRes() != Resource.Wasser) {
-							list.add(res1);
+						if (res3.getRes() != Resource.Wasser && res3.getRes() != Resource.Void) {
+							list.add(res3);
 						}
-						if (res4.getRes() != Resource.Wasser) {
-							list.add(res2);
+						if (res4.getRes() != Resource.Wasser && res4.getRes() != Resource.Void) {
+							list.add(res4);
 						}
 
 						// Erstelle knoten wenn es min. 1 Feld gibt mit Res !=

@@ -156,7 +156,8 @@ public class BoardDisplayer extends JPanel {
 
 				if (k.isClaimable()) {
 					g2.setColor(Color.WHITE);
-					g2.drawString(String.valueOf(k.getScore()), p.x - size / 4, p.y + size / 4);
+					g2.drawString(String.format("%.01f", k.getScore()), p.x - size / 4, p.y + size / 4);
+					//g2.drawString(k.getAllField()[0]., p.x - size / 4, p.y + size / 4);
 				}
 			} else {
 				g2.setColor(Color.BLACK);

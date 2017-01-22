@@ -18,19 +18,32 @@ public class Resourcenfeld {
 	private int y;
 	private int diceValue;
 
+	private static float[] probabilities = {0,0,
+			2.778f,
+			5.556f,
+			8.333f,
+			11.111f,
+			13.889f,
+			16.667f,
+			13.889f,
+			11.111f,
+			8.333f,
+			5.556f,
+			2.778f
+	};
+
 	public Resourcenfeld(Resource type) {
 		res = type;
 		knotenMap = new HashMap<KnotenName, Knoten>();
-		setDiceValue(-1);
 	}
 
-	public Resourcenfeld(Resource res, float probability, int x, int y) {
+	public Resourcenfeld(Resource res, int diceValue, int x, int y) {
 		this.res = res;
-		this.probability = probability;
+		this.probability = calculateProbability(diceValue);
 		this.x = x;
 		this.y = y;
+		this.diceValue = diceValue;
 		knotenMap = new HashMap<KnotenName, Knoten>();
-		setDiceValue(-1);
 	}
 
 	public int getDiceValue() {
@@ -55,6 +68,12 @@ public class Resourcenfeld {
 
 	public void setProbability(float probability) {
 		this.probability = probability;
+	}
+
+	public static float calculateProbability(int diceValue) {
+		if(diceValue < 0 || diceValue > 12)
+			return 0f;
+		return probabilities[diceValue];
 	}
 
 	public int getX() {
