@@ -150,70 +150,69 @@ abstract public class BoardFactory {
 					// x=+1 , y=-1
 					Resourcenfeld res1 = rfHash.get((x) + ":" + (y - 1));
 					Resourcenfeld res2 = rfHash.get((x + 1) + ":" + (y - 1));
+					Resourcenfeld res3 = rfHash.get((x + 1) + ":" + (y - 2));
 
-					if (res1 != null && res2 != null) {
+					if (res1 != null && res2 != null && res3 != null) {
 
-						ArrayList<Knoten> list = new ArrayList<Knoten>();
+						Knoten[] list = new Knoten[3];
 
 						Knoten targetK = resf.getKnoten(KnotenName.TopMid);
 
-						Knoten k1 = res1.getKnoten(KnotenName.BottomMid); // ==
-																			// TopLeft
-						Knoten k2 = res2.getKnoten(KnotenName.BottomMid); // ==
-																			// TopRight
-						Knoten k3 = res1.getKnoten(KnotenName.TopRight); // ==
-																			// k4
-						Knoten k4 = res2.getKnoten(KnotenName.TopLeft);
+						Knoten k1 = res1.getKnoten(KnotenName.BottomMid);
 
-						if (k1 != resf.getKnoten(KnotenName.TopLeft)) {
-							list.add(k1);
+						Knoten k2 = res2.getKnoten(KnotenName.BottomMid);
+
+						Knoten k3 = res3.getKnoten(KnotenName.BottomMid);
+
+
+						if (k1 != null) {
+							list[0] = k1;
 						}
-						if (k2 != resf.getKnoten(KnotenName.TopRight)) {
-							list.add(k2);
+						if (k2 != null) {
+							list[1] = k2;
 						}
-						if (k3 != k4) {
-							list.add(k3);
+						if (k3 != null) {
+							list[2] = k3;
 						}
 
-						if (list.size() > 0) {
-							targetK.setAllNeighbor((Knoten[]) list.toArray());
-						}
+						if(targetK != null)
+							targetK.setAllNeighbor(list);
+
 					}
 
 					// Bottom Mid
 					// x=0 , y=+1
 					// x=-1 , y=+1
 
-					Resourcenfeld res3 = rfHash.get((x) + ":" + (y + 1));
-					Resourcenfeld res4 = rfHash.get((x - 1) + ":" + (y + 1));
+					Resourcenfeld res4 = rfHash.get((x) + ":" + (y + 1));
+					Resourcenfeld res5 = rfHash.get((x - 1) + ":" + (y + 1));
+					Resourcenfeld res6 = rfHash.get((x - 1) + ":" + (y + 2));
 
-					if (res3 != null && res4 != null) {
+					if (res4 != null && res5 != null && res6 != null) {
 
-						ArrayList<Knoten> list = new ArrayList<Knoten>();
+						Knoten[] list = new Knoten[3];
 
 						Knoten targetK = resf.getKnoten(KnotenName.BottomMid);
 
-						Knoten k1 = res3.getKnoten(KnotenName.TopMid); // ==
-																		// BottomRight
-						Knoten k2 = res4.getKnoten(KnotenName.TopMid); // ==
-																		// BottomLeft
-						Knoten k3 = res3.getKnoten(KnotenName.BottomLeft); // ==
-																			// k4
-						Knoten k4 = res4.getKnoten(KnotenName.BottomRight);
+						Knoten k1 = res4.getKnoten(KnotenName.TopMid);
 
-						if (k1 != resf.getKnoten(KnotenName.BottomRight)) {
-							list.add(k1);
+						Knoten k2 = res5.getKnoten(KnotenName.TopMid);
+
+						Knoten k3 = res6.getKnoten(KnotenName.TopMid);
+
+
+						if (k1 != null) {
+							list[0] = k1;
 						}
-						if (k2 != resf.getKnoten(KnotenName.BottomLeft)) {
-							list.add(k2);
+						if (k2 != null) {
+							list[1] = k2;
 						}
-						if (k3 != k4) {
-							list.add(k3);
+						if (k3 != null) {
+							list[2] = k3;
 						}
 
-						if (list.size() == 3) {
-							targetK.setAllNeighbor((Knoten[]) list.toArray());
-						}
+						if(targetK != null)
+							targetK.setAllNeighbor(list);
 
 					}
 

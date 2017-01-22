@@ -94,6 +94,8 @@ public class Knoten implements Comparable<Knoten> {
 
 	public boolean isClaimable() {
 		for(Knoten k: neighbors) {
+			if(k == null)
+				continue;
 			if (k.hasOwner())
 				return false;
 		}
