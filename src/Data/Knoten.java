@@ -63,7 +63,11 @@ public class Knoten implements Comparable<Knoten> {
 	}
 
 	public void updateScore(int round, Player activePlayer) {
-
+		if(!isClaimable() || hasOwner()){
+			setScore(0);
+			return;
+		}
+		
 		float score = 0f;
 
 		HashMap<Const.Resource, Integer> resourceIntegerHashMap = new HashMap<>();
@@ -82,11 +86,6 @@ public class Knoten implements Comparable<Knoten> {
 			} else {
 				resourceIntegerHashMap.put(f.getRes(), 1);
 			}
-		}
-
-		if (!isClaimable()) {
-			setScore(0);
-			return;
 		}
 
 		setScore(score);
