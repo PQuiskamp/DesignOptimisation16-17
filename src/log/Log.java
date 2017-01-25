@@ -1,15 +1,17 @@
 package log;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 import javax.swing.JScrollBar;
 import javax.swing.JTextArea;
 
 public abstract class Log {
 
-	private static JTextArea outputArea;
-	private static JScrollBar scrollBar;
+	private static ArrayList<JTextArea> outputAreas;
+	private static HashMap<JTextArea, JScrollBar> scrollbars;
 
 	public static void log(String text) {
 		if (text == null) {
@@ -18,16 +20,21 @@ public abstract class Log {
 
 		text = "[" + formatNow() + "] " + text.trim();
 		System.out.println(text);
-		if (outputArea != null) {
-			outputArea.append(text + "\n");
-			scrollBar.setValue(scrollBar.getMaximum());
+		if (outputAreas != null) {
+			for (JTextArea textArea : outputAreas) {
+				JScrollBar scrollBar = scrollbars.get(textArea);
+				textArea.append(text + "\n");
+				scrollBar.setValue(scrollBar.getMaximum());
+			}
 		}
 	}
 
 	public static void clear() {
 		log("Clearing the visible log.");
-		if (outputArea != null) {
-			outputArea.setText("");
+		if (outputAreas != null) {
+			for (JTextArea textArea : outputAreas) {
+				textArea.setText("");
+			}
 		}
 	}
 
@@ -39,17 +46,18 @@ public abstract class Log {
 		log(o.toString());
 	}
 
-	public static void setScrollBar(JScrollBar scrollBar) {
-		Log.scrollBar = scrollBar;
-	}
-
 	public static String formatNow() {
 		Date date = new Date();
 		return new SimpleDateFormat("dd.MM.yyyy - hh:mm:ss").format(date);
 	}
 
-	public static void setOutputArea(JTextArea outputArea) {
-		Log.outputArea = outputArea;
+	public static void addOutputArea(JTextArea outputArea, JScrollBar scrollBar) {
+		if (outputAreas == null) {
+			outputAreas = new ArrayList<>();
+			scrollbars = new HashMap<>();
+		}
+		outputAreas.add(outputArea);
+		scrollbars.put(outputArea, scrollBar);
 	}
 
 }

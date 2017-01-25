@@ -99,7 +99,7 @@ public class BoardDisplayer extends JPanel {
 		}
 		int boardWidth = board.getWidth();
 		int boardHeight = board.getHeight();
-		maker = new HexMaker(width / (boardWidth + 1), height / (boardHeight + 1), -70,50, board);
+		maker = new HexMaker(width / (boardWidth + 1), height / (boardHeight + 1), -70, 50, board);
 
 		// Color helloWorldColor = getRandomColor();
 		// g.setColor(helloWorldColor);
@@ -146,6 +146,10 @@ public class BoardDisplayer extends JPanel {
 		int fontSize = maker.getBaseFontSize();
 		// Draw Knoten
 		for (Knoten k : pointMap.keySet()) {
+			if (k == null) {
+				continue;
+			}
+
 			Point p = pointMap.get(k);
 
 			int size = (int) (fontSize * 0.75);
@@ -157,7 +161,8 @@ public class BoardDisplayer extends JPanel {
 				if (k.isClaimable()) {
 					g2.setColor(Color.WHITE);
 					g2.drawString(String.format("%.01f", k.getScore()), p.x - size / 4, p.y + size / 4);
-					//g2.drawString(k.getAllField()[0]., p.x - size / 4, p.y + size / 4);
+					// g2.drawString(k.getAllField()[0]., p.x - size / 4, p.y +
+					// size / 4);
 				}
 			} else {
 				g2.setColor(Color.BLACK);

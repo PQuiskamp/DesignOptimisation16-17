@@ -8,12 +8,12 @@ import java.util.Random;
 
 import Data.Board;
 import Data.Knoten;
-import Data.Resourcenfeld;
 import Factory.BoardFactory;
 import log.Log;
 
 public class Game {
 
+	public static final int DEFAULT_PLAYER_COUNT = 4;
 	private Board board;
 	private int round;
 	private ArrayList<Player> players;
@@ -115,7 +115,7 @@ public class Game {
 
 	public static Game defaultGame() {
 		Board b = BoardFactory.creatBoard();
-		return new Game(b, 4);
+		return new Game(b, DEFAULT_PLAYER_COUNT);
 	}
 
 	public Player getCurrentPlayer() {
