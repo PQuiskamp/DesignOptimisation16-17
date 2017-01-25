@@ -137,7 +137,7 @@ public class HexMaker {
 			g2.setFont(textFont);
 			g2.drawString(String.valueOf(würfelvalue), x + r + offsetX - baseFontsize / 3, y + r + offsetY + 4);
 
-			String percentage = feld.getProbability() + "%";
+			String percentage = String.format("%.01f", feld.getProbability())  + "%";
 			g2.setFont(new Font(FONT_NAME, Font.PLAIN, baseFontsize / 2));
 			g2.drawString(percentage, x + r + offsetX - baseFontsize / 3, y + r + offsetY + 4 + baseFontsize / 2);
 		}

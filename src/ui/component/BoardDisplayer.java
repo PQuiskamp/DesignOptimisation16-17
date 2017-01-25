@@ -9,6 +9,7 @@ import java.awt.RenderingHints;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 
 import javax.swing.JPanel;
@@ -28,6 +29,7 @@ public class BoardDisplayer extends JPanel {
 
 	private static final long serialVersionUID = 3755425870029209163L;
 
+	public final static Color COLORBESTSCORE = new Color(218, 35, 255);
 	public final static Color COLOURCELL = Color.ORANGE;
 	public final static Color COLOURGRID = Color.BLACK;
 	public final static Color COLOURONE = new Color(255, 255, 255, 200);
@@ -155,12 +157,26 @@ public class BoardDisplayer extends JPanel {
 			int size = (int) (fontSize * 0.75);
 			Player owner = k.getOwner();
 			if (owner == null) {
-				g2.setColor(Color.BLACK);
+				double score = k.getScore();
+				Color scoreColor = Color.BLACK;
+
+				if(k.isClaimable()){
+					double normalizedScore = normalize(score);
+					int red = COLORBESTSCORE.getRed();
+					int green = COLORBESTSCORE.getGreen();
+					int blue = COLORBESTSCORE.getBlue();
+
+					scoreColor = new Color((int) (red * normalizedScore), (int) (green * normalizedScore),
+							(int) (blue * normalizedScore));
+				}
+
+				g2.setColor(scoreColor);
 				g2.fillOval(p.x - size / 2, p.y - size / 2, size, size);
 
 				if (k.isClaimable()) {
 					g2.setColor(Color.WHITE);
-					g2.drawString(String.format("%.01f", k.getScore()), p.x - size / 4, p.y + size / 4);
+
+					g2.drawString(String.format("%.01f", score), p.x - size / 4, p.y + size / 4);
 					// g2.drawString(k.getAllField()[0]., p.x - size / 4, p.y +
 					// size / 4);
 				}
@@ -191,6 +207,15 @@ public class BoardDisplayer extends JPanel {
 			String playername = turnTag + "Player " + (i + 1);
 			g2.drawString(playername, textOrigin.x, textOrigin.y + fontSize * (i + 1));
 		}
+	}
+
+	private double normalize(double score) {
+		ArrayList<Knoten> knoten = new ArrayList<>(game.getBoard().getKnotenListe());
+		Collections.sort(knoten);
+		double max = knoten.get(knoten.size() - 1).getScore();
+		double min = knoten.get(0).getScore();
+
+		return 1 - (score - min) / (max - min);
 	}
 
 }
