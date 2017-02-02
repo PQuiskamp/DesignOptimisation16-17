@@ -77,9 +77,7 @@ public class Player {
 
 		for (Knoten k : getOwnedKnoten()) {
 			for (Resourcenfeld feld : k.getAllField()) {
-				if (!liste.contains(feld)) {
-					liste.add(feld);
-				}
+				liste.add(feld);
 			}
 		}
 
@@ -125,6 +123,7 @@ public class Player {
 	}
 
 	public void updateResourceNumbers() {
+		nSchaf = nErz = nHolz = nLehm = nWeizen = 0;
 		for(Resourcenfeld r: getOwnedResourcenFeld()) {
 			setResourceCount(r.getRes(), getResourceCount(r.getRes()) + 1);
 		}
@@ -132,6 +131,14 @@ public class Player {
 
 	public Color getColor() {
 		return color;
+	}
+
+	public String toString() {
+		return "Lehm: " + nLehm +
+				", Holz: " + nHolz +
+				", Erz: " + nErz +
+				", Weizen: " + nWeizen +
+				", Schafe: " + nSchaf;
 	}
 
 }

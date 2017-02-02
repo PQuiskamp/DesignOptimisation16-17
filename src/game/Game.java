@@ -76,6 +76,9 @@ public class Game {
 
 			// Update number of resources a player has
 			player.updateResourceNumbers();
+
+			Log.log("Player claimed vertex with score " + best.getScore());
+			Log.log("Player resource status: " + player.toString());
 		}
 	}
 

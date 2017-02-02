@@ -62,6 +62,8 @@ public class Knoten implements Comparable<Knoten> {
 		return owner;
 	}
 
+	double risk = 2;
+
 	public void updateScore(int round, Player activePlayer) {
 		if(!isClaimable() || hasOwner()){
 			setScore(0);
@@ -76,10 +78,12 @@ public class Knoten implements Comparable<Knoten> {
 		for(Resourcenfeld f: resfelder) {
 			if(f == null)
 				continue;
-			float prob = f.getProbability();
-			prob = prob * activePlayer.getNeedsModified(f.getRes(),
+			double prob = f.getProbability();
+			double resMod = activePlayer.getNeedsModified(f.getRes(),
 					resourceIntegerHashMap.get(f.getRes())==null?0:resourceIntegerHashMap.get(f.getRes()));
-			score += prob;
+			prob = 1-Math.exp(-prob/risk);
+			prob = prob * resMod;
+			score += prob*100f/3f;
 
 			if(resourceIntegerHashMap.containsKey(f.getRes())) {
 				resourceIntegerHashMap.put(f.getRes(), resourceIntegerHashMap.get(f.getRes())+1);
