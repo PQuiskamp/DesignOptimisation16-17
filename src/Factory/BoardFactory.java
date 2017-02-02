@@ -160,32 +160,33 @@ abstract public class BoardFactory {
 					Resourcenfeld res2 = rfHash.get((x + 1) + ":" + (y - 1));
 					Resourcenfeld res3 = rfHash.get((x + 1) + ":" + (y - 2));
 
-					if (res1 != null && res2 != null && res3 != null) {
 
-						Knoten[] list = new Knoten[3];
+					Knoten[] list = new Knoten[3];
 
-						Knoten targetK = resf.getKnoten(KnotenName.TopMid);
+					Knoten targetK = resf.getKnoten(KnotenName.TopMid);
 
+					if (res1 != null) {
 						Knoten k1 = res1.getKnoten(KnotenName.BottomMid);
-
-						Knoten k2 = res2.getKnoten(KnotenName.BottomMid);
-
-						Knoten k3 = res3.getKnoten(KnotenName.BottomMid);
-
 						if (k1 != null) {
 							list[0] = k1;
 						}
+					}
+					if (res2 != null) {
+						Knoten k2 = res2.getKnoten(KnotenName.BottomMid);
 						if (k2 != null) {
 							list[1] = k2;
 						}
+					}
+					if (res3 != null) {
+						Knoten k3 = res3.getKnoten(KnotenName.BottomMid);
 						if (k3 != null) {
 							list[2] = k3;
 						}
-
-						if (targetK != null)
-							targetK.setAllNeighbor(list);
-
 					}
+
+					if (targetK != null)
+						targetK.setAllNeighbor(list);
+
 
 					// Bottom Mid
 					// x=0 , y=+1
@@ -195,32 +196,32 @@ abstract public class BoardFactory {
 					Resourcenfeld res5 = rfHash.get((x - 1) + ":" + (y + 1));
 					Resourcenfeld res6 = rfHash.get((x - 1) + ":" + (y + 2));
 
-					if (res4 != null && res5 != null && res6 != null) {
+					list = new Knoten[3];
 
-						Knoten[] list = new Knoten[3];
+					targetK = resf.getKnoten(KnotenName.BottomMid);
 
-						Knoten targetK = resf.getKnoten(KnotenName.BottomMid);
-
+					if(res4 != null) {
 						Knoten k1 = res4.getKnoten(KnotenName.TopMid);
-
-						Knoten k2 = res5.getKnoten(KnotenName.TopMid);
-
-						Knoten k3 = res6.getKnoten(KnotenName.TopMid);
-
 						if (k1 != null) {
 							list[0] = k1;
 						}
+					}
+					if(res5 != null) {
+						Knoten k2 = res5.getKnoten(KnotenName.TopMid);
 						if (k2 != null) {
 							list[1] = k2;
 						}
+					}
+					if(res6 != null) {
+						Knoten k3 = res6.getKnoten(KnotenName.TopMid);
 						if (k3 != null) {
 							list[2] = k3;
 						}
-
-						if (targetK != null)
-							targetK.setAllNeighbor(list);
-
 					}
+
+					if (targetK != null)
+						targetK.setAllNeighbor(list);
+
 
 				} // END IF
 			} // END FOR
