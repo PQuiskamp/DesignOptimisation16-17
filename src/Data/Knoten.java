@@ -78,7 +78,7 @@ public class Knoten implements Comparable<Knoten> {
 		for(Resourcenfeld f: resfelder) {
 			if(f == null)
 				continue;
-			double prob = f.getProbability();
+			double prob = f.getProbability()/100.0;
 			double resMod = activePlayer.getNeedsModified(f.getRes(),
 					resourceIntegerHashMap.get(f.getRes())==null?0:resourceIntegerHashMap.get(f.getRes()));
 			prob = 1-Math.exp(-prob/ RISK);
