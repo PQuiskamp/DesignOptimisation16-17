@@ -25,7 +25,7 @@ public class Game {
 		players = new ArrayList<>();
 
 		LinkedList<Color> list = new LinkedList<>(getAllColors());
-		Collections.shuffle(list);
+		// Collections.shuffle(list);
 		for (int i = 0; i < playerClount; i++) {
 			Random rng = new Random();
 			Color color = new Color(rng.nextInt(255), rng.nextInt(255), rng.nextInt(255));
@@ -130,8 +130,8 @@ public class Game {
 		colorList.add(Color.RED);
 		colorList.add(Color.GREEN);
 		colorList.add(Color.YELLOW);
-		colorList.add(Color.ORANGE);
 		colorList.add(Color.CYAN);
+		colorList.add(Color.ORANGE);
 		colorList.add(Color.PINK);
 		colorList.add(Color.MAGENTA);
 		colorList.add(Color.LIGHT_GRAY);
