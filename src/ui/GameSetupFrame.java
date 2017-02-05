@@ -33,9 +33,9 @@ public class GameSetupFrame extends JFrame {
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setLocationRelativeTo(null);
 		GridBagLayout gridBagLayout = new GridBagLayout();
-		gridBagLayout.columnWidths = new int[] { 0, 218, 0, 0 };
+		gridBagLayout.columnWidths = new int[] { 0, 218, 0, 0, 0 };
 		gridBagLayout.rowHeights = new int[] { 0, 0, 0, 0, 0 };
-		gridBagLayout.columnWeights = new double[] { 0.0, 1.0, 0.0, Double.MIN_VALUE };
+		gridBagLayout.columnWeights = new double[] { 0.0, 1.0, 0.0, 0.0, Double.MIN_VALUE };
 		gridBagLayout.rowWeights = new double[] { 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE };
 		getContentPane().setLayout(gridBagLayout);
 
@@ -50,7 +50,7 @@ public class GameSetupFrame extends JFrame {
 		playersSP = new JSpinner();
 		playersSP.setModel(new SpinnerNumberModel(new Integer(4), new Integer(1), null, new Integer(1)));
 		GridBagConstraints gbc_playersSP = new GridBagConstraints();
-		gbc_playersSP.gridwidth = 2;
+		gbc_playersSP.gridwidth = 3;
 		gbc_playersSP.insets = new Insets(0, 0, 5, 0);
 		gbc_playersSP.fill = GridBagConstraints.HORIZONTAL;
 		gbc_playersSP.gridx = 1;
@@ -85,9 +85,21 @@ public class GameSetupFrame extends JFrame {
 				randomSeed();
 			}
 		});
+
+		JButton btnPresentationSeed = new JButton("Presentation seed");
+		btnPresentationSeed.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				seedTF.setText("1486291993693");
+			}
+		});
+		GridBagConstraints gbc_btnPresentationSeed = new GridBagConstraints();
+		gbc_btnPresentationSeed.insets = new Insets(0, 0, 5, 5);
+		gbc_btnPresentationSeed.gridx = 2;
+		gbc_btnPresentationSeed.gridy = 1;
+		getContentPane().add(btnPresentationSeed, gbc_btnPresentationSeed);
 		GridBagConstraints gbc_btnRandom = new GridBagConstraints();
 		gbc_btnRandom.insets = new Insets(0, 0, 5, 0);
-		gbc_btnRandom.gridx = 2;
+		gbc_btnRandom.gridx = 3;
 		gbc_btnRandom.gridy = 1;
 		getContentPane().add(btnRandom, gbc_btnRandom);
 
@@ -95,15 +107,15 @@ public class GameSetupFrame extends JFrame {
 		closeBT.setSelected(true);
 		GridBagConstraints gbc_closeBT = new GridBagConstraints();
 		gbc_closeBT.anchor = GridBagConstraints.WEST;
-		gbc_closeBT.gridwidth = 3;
-		gbc_closeBT.insets = new Insets(0, 0, 5, 5);
+		gbc_closeBT.gridwidth = 4;
+		gbc_closeBT.insets = new Insets(0, 0, 5, 0);
 		gbc_closeBT.gridx = 0;
 		gbc_closeBT.gridy = 2;
 		getContentPane().add(closeBT, gbc_closeBT);
 
 		JPanel panel = new JPanel();
 		GridBagConstraints gbc_panel = new GridBagConstraints();
-		gbc_panel.gridwidth = 3;
+		gbc_panel.gridwidth = 4;
 		gbc_panel.anchor = GridBagConstraints.SOUTH;
 		gbc_panel.fill = GridBagConstraints.HORIZONTAL;
 		gbc_panel.gridx = 0;
